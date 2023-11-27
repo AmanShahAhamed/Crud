@@ -2,35 +2,7 @@ import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import toast from "react-hot-toast";
-
-const EmpData = [
-  { id: "tt", name: "aman", salary: 10000, designation: "software engineer" },
-  {
-    id: "uu",
-    name: "aman shah",
-    salary: 10000,
-    designation: "software engineer",
-  },
-  {
-    id: "vv",
-    name: "aman shah ahahmed",
-    salary: 10000,
-    designation: "software engineer",
-  },
-  { id: "aa", name: "aman2 ", salary: 10000, designation: "software engineer" },
-  {
-    id: "ww",
-    name: "aman don",
-    salary: 10000,
-    designation: "software engineer",
-  },
-  {
-    id: "xx",
-    name: "aman king",
-    salary: 10000,
-    designation: "software engineer",
-  },
-];
+import { EmpData } from "../constant/EmpData";
 
 const EmployeeTable = (props) => {
   const [empData, setEmpData] = useState(EmpData);
