@@ -25,4 +25,10 @@ export const EmpData = [
     salary: 10000,
     designation: "software engineer",
   },
+  {
+    id: "zz",
+    name: "aman king",
+    salary: 10000,
+    designation: "software engineer",
+  },
 ];
