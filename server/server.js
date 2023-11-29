@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const empRoute = require("./routes/empRoute");
 
 dotenv.config({ path: "./.env" });
@@ -16,6 +17,7 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

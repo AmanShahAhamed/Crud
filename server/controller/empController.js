@@ -1,4 +1,5 @@
 const Emp = require("../model/user");
+
 const EmpController = {
   getAllEmp: async (req, res) => {
     try {
@@ -9,6 +10,19 @@ const EmpController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  getOneEmp: async (req, res) => {
+    try {
+      const id = req.query.id;
+      const emps = await Emp.findById(id);
+      if (!emps) return res.status(404).json({ error: "Emp not found" });
+      res.json(emps);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   createEmp: async (req, res) => {
     try {
       const emp = req.body;

@@ -2,16 +2,24 @@ import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import toast from "react-hot-toast";
-import { EmpData } from "../constant/EmpData";
+import axios from "axios";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const EmployeeTable = (props) => {
-  const [empData, setEmpData] = useState(EmpData);
+  const [empData, setEmpData] = useState([]);
 
-  useEffect(() => {
-    if (Object.keys(props.empNewData).length > 0) {
-      setEmpData((prev) => [props.empNewData, ...prev]);
-    }
-  }, [props.triggered, props.empNewData]);
+  const fetchData = () => {
+    axios
+      .get(`${apiUrl}/emp`)
+      .then((response) => {
+        setEmpData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  useEffect(() => fetchData(), [props.triggered]);
 
   useEffect(() => {
     if (Object.keys(props.updatedEmp).length > 0) {
@@ -23,19 +31,23 @@ const EmployeeTable = (props) => {
     }
   }, [props.updateTableTriggered, props.updatedEmp]);
 
-  const deleteEmpData = (id) => {
-    setEmpData((prev) => prev.filter((obj) => obj.id !== id));
-    toast.success("Employee removed");
+  const deleteEmpData = async (id) => {
+    axios
+      .delete(`${apiUrl}/emp`, { params: { id } })
+      .then((response) => {
+        toast.success("Employee removed");
+        fetchData();
+      })
+      .catch((err) => {
+        toast.error(err.response.data.error);
+      });
   };
 
-  const updateEmpData = (id) => {
-    const emp = empData.find((e) => e.id === id);
-    props.update(emp);
-  };
+  const updateEmpData = (id) => props.update(id);
 
   const mapEmpData = empData.map((data) => {
     return (
-      <tr key={data.id}>
+      <tr key={data._id}>
         <td>{data.name}</td>
         <td>{data.designation}</td>
         <td>{data.salary}</td>
@@ -43,7 +55,7 @@ const EmployeeTable = (props) => {
           <button
             type="button"
             className="btn btn-link"
-            onClick={() => deleteEmpData(data.id)}
+            onClick={() => deleteEmpData(data._id)}
           >
             {" "}
             <MdDelete color="red" />
@@ -53,7 +65,7 @@ const EmployeeTable = (props) => {
           <button
             type="button"
             className="btn btn-link"
-            onClick={() => updateEmpData(data.id)}
+            onClick={() => updateEmpData(data._id)}
           >
             {" "}
             <FaPencil color="blue" />

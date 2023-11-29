@@ -7,19 +7,17 @@ import { Toaster } from "react-hot-toast";
 function App() {
   const [triggered, setTriggered] = useState(0);
   const [insertTriggered, setInsertTriggered] = useState(0);
-  const [insertedEmp, setInsertedEmp] = useState({});
+  const [insertedEmpId, setInsertedEmpId] = useState({});
   const [updateTableTriggered, setUpdateTableTriggered] = useState(0);
-  const [empData, setEmpData] = useState({});
   const [updatedEmp, setUpdatedEmp] = useState({});
 
   const handleEmpData = (empData) => {
-    setEmpData(empData);
     setTriggered((prev) => prev + 1);
   };
 
-  const handleInsertEmp = (emp) => {
+  const handleInsertEmp = (id) => {
     setInsertTriggered((prev) => prev + 1);
-    setInsertedEmp(emp);
+    setInsertedEmpId(id);
   };
 
   const setUpdateEmpData = (emp) => {
@@ -34,12 +32,11 @@ function App() {
       <EmployeeForm
         handle={handleEmpData}
         insertTriggered={insertTriggered}
-        insertedEmp={insertedEmp}
+        insertedEmpId={insertedEmpId}
         setUpdate={setUpdateEmpData}
       ></EmployeeForm>
       <EmployeeTable
         triggered={triggered}
-        empNewData={empData}
         update={handleInsertEmp}
         updatedEmp={updatedEmp}
         updateTableTriggered={updateTableTriggered}

@@ -1,38 +1,64 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
-const EmployeeForm = ({ handle, insertTriggered, insertedEmp, setUpdate }) => {
+const EmployeeForm = ({ handle, insertTriggered, insertedEmpId }) => {
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
   const [salary, setSalary] = useState("");
   const [btnName, setBtnName] = useState("Submit");
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  const createEmp = () => {
+    axios
+      .post(`${apiUrl}/emp`, {
+        name,
+        designation,
+        salary,
+      })
+      .then(() => {
+        toast.success("A New Employee Added");
+        handle();
+      })
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
-    if (Object.keys(insertedEmp).length > 0) {
-      setName(insertedEmp.name);
-      setDesignation(insertedEmp.designation);
-      setSalary(insertedEmp.salary);
-      setBtnName("Modify");
+    if (insertedEmpId) {
+      axios
+        .get(`${apiUrl}/emp/one`, { params: { id: insertedEmpId } })
+        .then((res) => {
+          setName(res.data.name);
+          setDesignation(res.data.designation);
+          setSalary(res.data.salary);
+          setBtnName("Modify");
+        });
     }
-  }, [insertTriggered, insertedEmp]);
+  }, [insertTriggered]);
+
+  const updateEmployee = () => {
+    axios
+      .patch(`${apiUrl}/emp?id=${insertedEmpId}`, {
+        name,
+        designation,
+        salary,
+      })
+      .then((res) => {
+        toast.success("Employee Data Modified");
+        handle();
+      })
+      .error((err) => {
+        toast.error(`Internal server error`);
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (name && designation && salary) {
-      const empObj = {
-        id: insertedEmp?.id ? insertedEmp.id : uuidv4(),
-        name,
-        designation,
-        salary,
-      };
-      btnName === "Submit" ? handle(empObj) : setUpdate(empObj);
+      btnName === "Submit" ? createEmp() : updateEmployee();
       setName("");
       setDesignation("");
       setSalary("");
-      btnName === "Submit"
-        ? toast.success("A New Employee Added")
-        : toast.success("Employee Data Modified");
       setBtnName("Submit");
     } else {
       toast.error("Employee all information must be filled");
