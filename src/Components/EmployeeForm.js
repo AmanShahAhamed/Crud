@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+// import * as axios from "axios";
 
 const EmployeeForm = ({ handle, insertTriggered, insertedEmpId }) => {
   const [name, setName] = useState("");
@@ -44,10 +45,12 @@ const EmployeeForm = ({ handle, insertTriggered, insertedEmpId }) => {
         salary,
       })
       .then((res) => {
+        console.log("res", res);
         toast.success("Employee Data Modified");
         handle();
       })
-      .error((err) => {
+      .catch((err) => {
+        console.log("serrrr", err);
         toast.error(`Internal server error`);
       });
   };
